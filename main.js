@@ -4,7 +4,7 @@ let turnPlayer = Math.round(Math.random()) + 1;
 
 const subzero =  {
     player: 1,
-    name: "Sub-Zero",
+    name: 'Sub-Zero',
     hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
     weapon: ['Ice Scepter', 'Kori Blade', 'Ice Hammer'],
@@ -15,7 +15,7 @@ const subzero =  {
 
 const sonya =  {
     player: 2,
-    name: "Sonya",
+    name: 'Sonya',
     hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/sonya.gif',
     weapon: ['Wind Blade', 'Garrote Wire', 'Drone'],
@@ -40,7 +40,7 @@ function createPlayer(player)  {
     const $character = createElement('div', 'character');
     const $img = createElement('img');
 
-    $life.style.width = player.hp + "%";    
+    $life.style.width = player.hp + '%';    
     $name.innerText = player.name;
     $img.src = player.img;
 
@@ -58,33 +58,42 @@ function createPlayer(player)  {
 $arenas.appendChild(createPlayer(subzero));
 $arenas.appendChild(createPlayer(sonya));
 
-function playerLose(name) {
-    const $loseTitel = createElement ('div', 'loseTitle');
-    $loseTitel.innerText = name + ' lose';
-    return $loseTitel;
+function playerWiner(name) {
+    const $winerTitel = createElement ('div', 'winerTitle');
+    $winerTitel.innerText = name + ' wins';
+    return $winerTitel;
 }
 
-function changeHP(player) {
+function changeHp(player) {
+    console.log(player)
     const $playerLife = document.querySelector('.player' + player.player + ' .life');
-
     player.hp -= Math.round(Math.random() * 20) + 1;
     if (player.hp < 0) {
         player.hp = 0;
     }
     $playerLife.style.width = player.hp + '%';
-    if (player.hp <= 0) {
-        $arenas.appendChild(playerLose(player.name));
-        $randomButton.disabled = true;
-        $randomButton.style.display = 'none';
+}
+
+function endFight (player1, player2) {
+    if (player1.hp === 0) {
+        $arenas.appendChild(playerWiner(player2.name));
+        $randomButton.disabled = true
+    }
+}
+
+function fight(player1, player2) {
+    console.log(turnPlayer)
+    if (turnPlayer === 1) {
+        changeHp(player2);
+        endFight(player2, player1);
+        turnPlayer = 2;
+    } else {
+        changeHp(player1);
+        endFight(player1, player2);
+        turnPlayer = 1;
     }
 }
 
 $randomButton.addEventListener('click', function() {
-    if (turnPlayer === 1) {
-        changeHP(sonya)
-        turnPlayer = 2
-    } else {
-        changeHP(subzero)
-        turnPlayer = 1
-    }
+    fight(subzero, sonya)
 })
