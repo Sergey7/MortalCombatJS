@@ -9,8 +9,11 @@ const subzero =  {
     img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
     weapon: ['Ice Scepter', 'Kori Blade', 'Ice Hammer'],
     attack: function (name) {
-        console.log(name + 'fight...')
+        console.log(this.name + 'fight...')
     },
+    changeHp: changeHp,
+    elHP:  elHP,
+    renderHP: renderHP,
 }
 
 const sonya =  {
@@ -20,8 +23,11 @@ const sonya =  {
     img: 'http://reactmarathon-api.herokuapp.com/assets/sonya.gif',
     weapon: ['Wind Blade', 'Garrote Wire', 'Drone'],
     attack: function (name) {
-        console.log(name + 'fight...')
+        console.log(this.name + 'fight...')
     },
+    changeHp: changeHp,
+    elHP:  elHP,
+    renderHP: renderHP,
 }
 
 function createElement(tag, className) {
@@ -64,31 +70,41 @@ function playerWiner(name) {
     return $winerTitel;
 }
 
-function changeHp(player) {
-    console.log(player)
-    const $playerLife = document.querySelector('.player' + player.player + ' .life');
-    player.hp -= Math.round(Math.random() * 20) + 1;
-    if (player.hp < 0) {
-        player.hp = 0;
-    }
-    $playerLife.style.width = player.hp + '%';
+function changeHp (minusHP) {
+    this.hp -= minusHP;
+    if (this.hp < 0) {
+        this.hp = 0;
+    }; 
+}
+
+function elHP() {
+    return document.querySelector('.player' + this.player + ' .life');
+}
+
+function renderHP() {
+    this.elHP().style.width = this.hp + "%";
 }
 
 function endFight (player1, player2) {
     if (player1.hp === 0) {
         $arenas.appendChild(playerWiner(player2.name));
-        $randomButton.disabled = true
+        $randomButton.innerText = 'Play again?';
+        $randomButton.removeEventListener('click', function() {})
+        $randomButton.addEventListener('click', function() {
+            location.reload();
+        })
     }
 }
 
 function fight(player1, player2) {
-    console.log(turnPlayer)
     if (turnPlayer === 1) {
-        changeHp(player2);
+        player2.changeHp(Math.round(Math.random() * 20) + 1);
+        player2.renderHP();
         endFight(player2, player1);
         turnPlayer = 2;
     } else {
-        changeHp(player1);
+        player1.changeHp(Math.round(Math.random() * 20) + 1);
+        player1.renderHP();
         endFight(player1, player2);
         turnPlayer = 1;
     }
