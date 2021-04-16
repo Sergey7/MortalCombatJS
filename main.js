@@ -2,7 +2,7 @@ const $arenas = document.querySelector('.arenas');
 const $randomButton = document.querySelector('.button');
 const $formFight = document.querySelector('.control')
 const $chat  = document.querySelector('.chat')
-const date = new Date();
+
 const HIT = {
     head: 30,
     body: 25,
@@ -17,7 +17,7 @@ const subzero =  {
     hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
     weapon: ['Ice Scepter', 'Kori Blade', 'Ice Hammer'],
-    attack: function (name) {
+    attack: function () {
         console.log(this.name + 'fight...')
     },
     changeHp,
@@ -31,7 +31,7 @@ const sonya =  {
     hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/sonya.gif',
     weapon: ['Wind Blade', 'Garrote Wire', 'Drone'],
-    attack: function (name) {
+    attack: function () {
         console.log(this.name + 'fight...')
     },
     changeHp,
@@ -86,6 +86,7 @@ function createElement(tag, className) {
     }
     return $tag;
 }
+
 function getRandom (num) {
     return Math.ceil(Math.random() * num);
 }
@@ -115,7 +116,6 @@ function createPlayer(player)  {
 
 $arenas.appendChild(createPlayer(subzero));
 $arenas.appendChild(createPlayer(sonya));
-
 
 function changeHp (minusHP) {
     this.hp -= minusHP;
@@ -150,6 +150,7 @@ function playerWiner(name) {
     } else {
         $winerTitel.innerText = 'Drow';
     } 
+    
     $arenas.appendChild($winerTitel);
     $randomButton.disabled = true;
     $arenas.appendChild(createReloadButton());
@@ -157,10 +158,13 @@ function playerWiner(name) {
 
 function endFight (player1, player2) {
     if (player1.hp === 0 && player2.hp === 0 ) {
+        $chat.insertAdjacentHTML('afterbegin', generateLogs(player1, player2, 'draw'))
         playerWiner();
     } else if (player2.hp === 0) {
+        $chat.insertAdjacentHTML('afterbegin', generateLogs(player1, player2, 'end'));
         playerWiner(player1.name);
     } else if (player1.hp === 0){
+        $chat.insertAdjacentHTML('afterbegin', generateLogs(player2, player1, 'end'));
         playerWiner(player2.name);
     }
 }
@@ -190,35 +194,39 @@ function attack () {
     return attack;
 }
 
-function createMessage (playerKick, playerDef, valueHit, event) {
+function generateLogs (playerKick, playerDef, event, hp) {
     let message;
     const time = getTime();
     
     switch (event) {
         case 'hit':
             message = logs.hit[getRandom(logs.hit.length) - 1].replace('[playerDefence]', playerDef.name).replace('[playerKick]', playerKick.name);
-            
-            return `<p>${time} ${message}</p>`;
+            return `<p class='hit'>[${time}] ${message} Потерял ${hp} hp. Осталось hp - [${playerDef.hp} /100]</p>`;
         case 'defence':
             message = logs.defence[getRandom(logs.defence.length) - 1].replace('[playerKick]', playerKick.name).replace('[playerDefence]', playerDef.name);
-            return `<p>${time} ${message}</p>`;
+            return `<p class='def'>[${time}] ${message}</p>`;
+        case 'end':
+            message = logs.end[getRandom(logs.end.length) - 1].replace('[playerWins]', playerKick.name).replace('[playerLose]', playerDef.name);
+            return `<p class='start'>[${time}] ${message}</p>`;
+        case 'draw':
+            return `<p class='start'>[${time}] ${logs.draw[0]}</p>`;
+
     }
 }
 
-function calсHit (myAttack, enemyAttack) {
-    if (myAttack.hit !== enemyAttack.defence) {
-        sonya.changeHp(myAttack.value);
-        sonya.renderHP();
-        $chat.insertAdjacentHTML('afterbegin', createMessage(subzero, sonya, myAttack.value, 'hit'));
+function getTime () {
+    const date = new Date();
+    return date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+}
+
+
+function calсHit (player1, playerAttack, player2, playerDef) {
+    if (playerAttack.hit !== playerDef.defence) {
+        player2.changeHp(playerAttack.value);
+        player2.renderHP();
+        $chat.insertAdjacentHTML('afterbegin', generateLogs(player1, player2, 'hit', playerAttack.value));
     }   else {
-        $chat.insertAdjacentHTML('afterbegin', createMessage(subzero, sonya, 'defence'));
-    }
-    if (enemyAttack.hit !== myAttack.defence) {
-        subzero.changeHp(enemyAttack.value);
-        subzero.renderHP();
-        $chat.insertAdjacentHTML('afterbegin', createMessage(sonya, subzero, enemyAttack.value, 'hit'));
-    }   else {
-        $chat.insertAdjacentHTML('afterbegin', createMessage(sonya, subzero, 'defence'));
+        $chat.insertAdjacentHTML('afterbegin', generateLogs(player1, player2, 'defence'));
     }
 }
 
@@ -227,15 +235,13 @@ $formFight.addEventListener('submit', function(e) {
     e.preventDefault();
     const enemy = enemyAttack();
     const myAttack = attack();
-    calсHit(myAttack, enemy);
+    calсHit(subzero, myAttack, sonya, enemy);
+    calсHit(sonya, enemy, subzero, myAttack);
     endFight(subzero, sonya);
 })
 
-function getTime () {
-    return date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
-}
+
 
 const time = getTime();
-const $startGame = `<p class='start'>${logs.start.replace('[time]', time).replace(['[player1]'], subzero.name).replace(['[player2]'], sonya.name)}</p>`;
-
+const $startGame = `<p class='start'>${logs.start.replace('time', time).replace(['[player1]'], subzero.name).replace(['[player2]'], sonya.name)}</p>`;
 $chat.insertAdjacentHTML('afterbegin', $startGame)

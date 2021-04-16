@@ -279,7 +279,7 @@ body {
     top: 4px;
 }
 
-.loseTitle, .winerTitel {
+.loseTitle, .winerTitle {
     position: absolute;
     top: 22%;
     left: 50%;
@@ -410,13 +410,13 @@ input[type=radio]:checked + label > span:hover {
 }
 
 .start {
-    color: green;
+    color: white;
 }
 
 .hit {
-    color: darkred;
+    color: rgb(243, 41, 41);
 }
 
 .def {
-    color: blue;
+    color: rgb(141, 218, 0);
 }
