@@ -170,6 +170,7 @@ body {
 }
 
 .chat {
+    
     width: 786px;
     height: 30vh;
     background-image: url(./assets/versus.png);
@@ -180,6 +181,7 @@ body {
     overflow: scroll;
     color: white;
     font-family: Arial;
+    
 }
 
 .character {
@@ -410,13 +412,40 @@ input[type=radio]:checked + label > span:hover {
 }
 
 .start {
+    font-family: 'Mortal Kombat 3';
     color: white;
+    font-weight: 500;
 }
 
-.hit {
-    color: rgb(243, 41, 41);
+.time {
+    font-family: 'Mortal Kombat 3';
+    font-weight: 300;
 }
 
-.def {
-    color: rgb(141, 218, 0);
+.p1 {
+    font-family: 'Mortal Kombat 3';
+    text-transform: uppercase;
+    font-weight: 500;
+    color: rgb(162,175,230);
+}
+
+.p2 {
+    font-family: 'Mortal Kombat 3';
+    text-transform: uppercase;
+    font-weight: 500;
+    color: rgb(218,156,33);
+}
+
+.redHp {
+    font-family: 'Mortal Kombat 3';
+    text-transform: uppercase;
+    font-weight: 500;
+    color: rgb(246,84,80);
+}
+
+.colorBlock {
+    font-family: 'Mortal Kombat 3';
+    text-transform: uppercase;
+    font-weight: 500;
+    color: rgb(89,252,101);
 }
