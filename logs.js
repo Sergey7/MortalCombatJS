@@ -49,22 +49,21 @@ const generateLogs = (playerKick, playerDef, event, hp) => {
         case 'start':
             const $startGame = `<p>${logs.start.replace('[time]', time).replace(['[player1]'], `<span class='${playerKick.styleName}'>${playerKick.name}</span>`).replace(['[player2]'], `<span class='${playerDef.styleName}'>${playerDef.name}</span>`)}</p>`;
             $chat.insertAdjacentHTML('afterbegin', $startGame);
-            return;
+            break;
         case 'hit':
             message = logs.hit[getRandom(logs.hit.length) - 1].replace('[playerDefence]', `<span class='${playerDef.styleName}'>${playerDef.name}</span>`).replace('[playerKick]', `<span class='${playerKick.styleName}'>${playerKick.name}</span>`);
             $chat.insertAdjacentHTML('afterbegin', `<p>${time} ${message} <span class='redHp'>[-${hp}]</span> <span class='${playerDef.styleName}'>[${playerDef.hp}/100]</span></p>`);
-            return;
+            break;
         case 'defence':
             message = logs.defence[getRandom(logs.defence.length) - 1].replace('[playerKick]', `<span class='${playerKick.styleName}'>${playerKick.name}</span>`).replace('[playerDefence]', `<span class='${playerDef.styleName}'>${playerDef.name}</span>`);
             $chat.insertAdjacentHTML('afterbegin', `<p>${time} ${message} <span class='colorBlock'>[block]</span> <span class='${playerDef.styleName}'>[${playerDef.hp}/100]</span> </p>`);
-            return;
+            break;
         case 'end':
             message = logs.end[getRandom(logs.end.length) - 1].replace('[playerWins]', `<span class='${playerKick.styleName}'>${playerKick.name}</span>`).replace('[playerLose]', `<span class='${playerDef.styleName}'>${playerDef.name}</span>`);
             $chat.insertAdjacentHTML('afterbegin', `<p>${time} ${message}</p>`);
-            return;
-        case 'draw':
+            break;
+        default:
             $chat.insertAdjacentHTML('afterbegin', `<p>${time} ${logs.draw[0]}</p>`)
-            return;
     };
 };
 

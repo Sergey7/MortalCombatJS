@@ -1,51 +1,33 @@
-import generateLogs from './logs.js';
-import { createPlayer, changeHp, elHP, renderHP } from './players.js';
-import { roundFight } from './fight.js';
+import Game from './Game.js';
+import Player from './Player.js';
 
 
-const $arenas = document.querySelector('.arenas');
-const $formFight = document.querySelector('.control');
-
-
-const subzero =  {
+const subzero = new Player ({
     player: 1,
     name: 'Sub-Zero',
     styleName: 'p1', 
     hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
-    weapon: ['Ice Scepter', 'Kori Blade', 'Ice Hammer'],
-    attack: function () {
-        console.log(this.name + 'fight...')
-    },
-    changeHp,
-    elHP,
-    renderHP,
-};
+    rootSelector: '.arenas',
+});
 
-const sonya =  {
+const sonya =  new Player ({
     player: 2,
     name: 'Sonya',
     styleName: 'p2', 
     hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/sonya.gif',
-    weapon: ['Wind Blade', 'Garrote Wire', 'Drone'],
-    attack: function () {
-        console.log(this.name + 'fight...')
-    },
-    changeHp,
-    elHP,
-    renderHP,
-};
+    rootSelector: '.arenas',
+});
 
-$arenas.appendChild(createPlayer(subzero));
-$arenas.appendChild(createPlayer(sonya));
+const game = new Game({
+    player1: subzero, 
+    player2: sonya,
+});
 
 
-generateLogs(subzero, sonya, 'start');
 
-$formFight.addEventListener('submit', function(e) {
-    e.preventDefault();
-    roundFight(subzero, sonya);
-})
+game.start();
+
 
 
